@@ -1,12 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
+import Button from '@material-ui/core/Button';
 
 //Dev mode
 const serverURL = ""; //enable for dev mode
@@ -66,6 +76,246 @@ const styles = theme => ({
   },
 
 });
+
+const Review = () => {
+
+  let [submitted, setSubmitted] = React.useState(false);
+
+  const [movieError, setMovieError] = React.useState("");
+  const [titleError, setTitleError] = React.useState("");
+  const [bodyError, setBodyError] = React.useState("");
+  const [ratingError, setRatingError] = React.useState("");
+
+  const check = () => {
+    let sum = 0;
+    if (movie == ""){
+      setMovieError("Please select a movie");
+    } else {
+      setMovieError("");
+      sum = sum + 1;
+    }
+    if (title == ""){
+      setTitleError("Please title your review");
+    } else {
+      setTitleError("");
+      sum = sum + 1;
+    }
+    if (body == ""){
+      setBodyError("Please write a review");
+    } else {
+      setBodyError("");
+      sum = sum + 1;
+    }
+    if (rating == ""){
+      setRatingError("Please rate the movie");
+    } else {
+      setRatingError("");
+      sum = sum + 1;
+    }
+    if (sum == 4){
+      setSubmitted(true);
+    }
+
+  }
+
+  const useStyles = makeStyles((theme) => ({
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 350,
+    },
+    selectEmpty: {
+      marginTop: theme.spacing(2),
+    },
+  }));
+  
+  const movieClasses = useStyles();
+
+  const [movie, setMovie] = React.useState('');
+
+  const handleMovie = (event) => {
+    setMovie(event.target.value);
+    setSubmitted(false);
+  }
+
+  const titleClasses = useStyles();
+  
+  const [title, setTitle] = React.useState('');
+
+  const handleTitle = (event) => {
+    setTitle(event.target.value);
+    setSubmitted(false);
+  }
+  
+  const bodyClasses = useStyles();
+
+  const [body, setBody] = React.useState('');
+
+  const handleBody = (event) => {
+    setBody(event.target.value);
+    setSubmitted(false);
+  }
+
+  const [rating, setRating] = React.useState('');
+
+  const handleRating = (event) => {
+    setRating(event.target.value);
+    setSubmitted(false);
+  }
+
+    return (
+      
+      <Grid Container 
+      direction="row"
+      >
+
+        <Grid item
+          xs = {12}
+          md = {6}
+          container
+          spacing={1}
+          direction="column"
+          justify="flex-start"
+          alignItems="flex-start"
+        >
+            
+            <Grid item>
+              <Typography variant={"h3"}>
+                Review One of These Five Specific Movies
+              </Typography>
+            </Grid>
+
+            <Grid item>
+              <MovieSelection 
+                handleMovie={handleMovie}
+                style={movieClasses}
+              />
+            </Grid>
+            
+            <Grid item>
+              <ReviewTitle 
+                handleTitle={handleTitle}
+                style={titleClasses}
+              />
+            </Grid>
+
+            <Grid item>
+              <ReviewBody 
+                handleBody={handleBody}
+                style={bodyClasses}
+              />
+            </Grid>
+            
+            <Grid item>
+              <h3></h3>
+            </Grid>
+            
+
+            <Grid item>
+              <ReviewRating handleRating={handleRating}/>
+            </Grid>
+
+        </Grid>
+
+        <Grid item
+        container
+        xs = {12}
+        md = {0}
+          spacing={1}
+          direction="column"
+        >
+            <Grid item>
+            <Button 
+              Variant="contained"
+              onClick={check}>Submit</Button>
+            </Grid>
+
+            <Grid item>
+              <p> {movieError} </p>
+              <p> {titleError} </p>
+              <p> {bodyError} </p>
+              <p> {ratingError} </p>
+            </Grid>
+
+            <Grid item>
+                <p>{submitted ? "Thank you for submitting your review!" : <></>}</p>
+                <p>{submitted ? "Selected Movie: " + movie : <></>}</p>
+                <p>{submitted ? "Title of Review: " + title : <></>}</p>
+                <p>{submitted ? "Review: " + body: <></>}</p>
+                <p>{submitted ? "Rating: " +  rating : <></>}</p>
+
+            </Grid>
+        </Grid>
+
+      
+      </Grid> 
+      
+    )
+}
+
+const MovieSelection = (props) => (
+
+    <div>
+      <FormControl className={props.style.formControl}>
+        <InputLabel id="demo-simple-select-label">Select Your Movie to Review</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          onChange={props.handleMovie}
+        >
+          <MenuItem value="Star Wars: A New Hope">Star Wars: A New Hope</MenuItem>
+          <MenuItem value="The Dark Knight">The Dark Knight</MenuItem>
+          <MenuItem value="The Lord of the Rings: The Return of the King">The Lord of the Rings: The Return of the King</MenuItem>
+          <MenuItem value="Harry Potter and the Goblet of Fire">Harry Potter and the Goblet of Fire</MenuItem>
+          <MenuItem value="Sharknado 5: Global Swarming">Sharknado 5: Global Swarming</MenuItem>
+        </Select>
+      </FormControl>
+    </div>
+  )
+
+const ReviewTitle = (props) => (
+  
+  <form>
+    <TextField 
+      id="standard-basic" 
+      label="Enter the Title of Your Movie Review Here" 
+      inputProps={{ maxLength: 40 }}
+      onChange={props.handleTitle}
+      className={props.style.formControl}
+    />
+  </form>
+  
+)
+
+const ReviewBody = (props) => (
+  <form>
+      <div>
+        <TextField
+          id="outlined-multiline-static"
+          label="Enter Your Movie Review Here"
+          multiline
+          rows={4}
+          inputProps={{ maxLength: 200 }}
+          onChange={props.handleBody}
+          className={props.style.formControl}
+        />
+      </div>
+  </form>
+)
+
+const ReviewRating = (props) => (
+  <FormControl>
+  <FormLabel component="legend">Rate Your Movie out of 5</FormLabel>
+  <RadioGroup onChange={props.handleRating}>
+    <FormControlLabel value={"1"} control={<Radio color="blue"/>} label="1" />
+    <FormControlLabel value={"2"} control={<Radio color="blue"/>} label="2" />
+    <FormControlLabel value={"3"} control={<Radio color="blue"/>} label="3" />
+    <FormControlLabel value={"4"} control={<Radio color="blue"/>} label="4" />
+    <FormControlLabel value={"5"} control={<Radio color="blue"/>} label="5" />
+  </RadioGroup>
+</FormControl>
+)
+
+
 
 
 class Home extends Component {
@@ -127,7 +377,6 @@ class Home extends Component {
         className={classes.mainMessageContainer}
       >
         <Grid item>
-
           <Typography
             variant={"h3"}
             className={classes.mainMessage}
@@ -135,16 +384,20 @@ class Home extends Component {
           >
             {this.state.mode === 0 ? (
               <React.Fragment>
-                Welcome!
+                
               </React.Fragment>
             ) : (
               <React.Fragment>
-                Welcome back!
+                
               </React.Fragment>
             )}
           </Typography>
-
         </Grid>
+
+        <Grid item>
+          <Review />
+        </Grid>
+
       </Grid>
     )
 
