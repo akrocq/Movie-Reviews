@@ -19,7 +19,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Button from '@material-ui/core/Button';
 
 //Dev mode
-const serverURL = "ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3026"; //enable for dev mode
+const serverURL = ""; //enable for dev mode
 
 //Deployment mode instructions
 //const serverURL = "http://ov-research-4.uwaterloo.ca:PORT"; //enable for deployed mode; Change PORT to the port number given to you;
@@ -79,7 +79,31 @@ const styles = theme => ({
 
 const Review = () => {
 
-  const [moviesList, setMoviesList] = React.useState([]);
+  
+  const addReview = () => {
+    callApiAddReview()
+  }
+
+  const callApiAddReview = async () => {
+
+    const url = serverURL + "/api/addReview";
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        //authorization: `Bearer ${this.state.token}`
+      },
+      body: JSON.stringify({
+        userID: userID,
+        movieID: movieData.id,
+        title: title,
+        body: body,
+        rating: rating
+      })
+    });
+  }
+  
 
   React.useEffect(() => {
     loadMovies();
@@ -110,6 +134,11 @@ const Review = () => {
     return body;
   }
 
+  const [moviesList, setMoviesList] = React.useState([]);
+
+  const [userID, setUserID] = React.useState("");
+  setUserID(1);
+
   let [submitted, setSubmitted] = React.useState(false);
 
   const [movieError, setMovieError] = React.useState("");
@@ -119,7 +148,7 @@ const Review = () => {
 
   const check = () => {
     let sum = 0;
-    if (movie == ""){
+    if (movieData.name == ""){
       setMovieError("Please select a movie");
     } else {
       setMovieError("");
@@ -150,37 +179,6 @@ const Review = () => {
 
   }
 
-  const [userID, setUserID] = React.useState(1);
-
-  const addReview = () => {
-    callApiAddReview()
-  }
-
-  const callApiAddReview = async () => {
-
-    const url = serverURL + "/api/addReview";
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        //authorization: `Bearer ${this.state.token}`
-      },
-      body: JSON.stringify({
-        userID: userID,
-        movieID: movie.id,
-        title: title,
-        body: body,
-        rating: rating
-      })
-    });
-    const nbody = await response.json();
-    if (response.status !== 200) throw Error(nbody.message);
-    return nbody;
-  }
-
- 
-
   const useStyles = makeStyles((theme) => ({
     formControl: {
       margin: theme.spacing(1),
@@ -193,12 +191,17 @@ const Review = () => {
   
   const movieClasses = useStyles();
 
-  const [movie, setMovie] = React.useState('');
-
-  const handleMovie = (event) => {
-    setMovie(event.target.value);
-    setSubmitted(false);
+  const [movieData, setMovieData] = React.useState([]);
+  const handleMovieData = (event) => {
+    //setMovieID(event.target.value.ID);
+    //setMovie(event.target.value.name);
+    //setSubmitted(false);
+    setMovieData(event.target.value)
   }
+
+  //const [movieID, setMovieID] = React.useState("");
+  
+  //const [movie, setMovie] = React.useState('');
 
   const titleClasses = useStyles();
   
@@ -225,35 +228,7 @@ const Review = () => {
     setSubmitted(false);
   } 
 
-  /**
-   * DECLARE NEW CONSTANTS 
-   * stateful movieList 
-   * stateful movieID
-   * stateful userID
-   */
-
-  /**
-   * getMovies
-   * calls the callApiGetMovies
-   * setMovieList() !!!! rmr to change it instead of setRecipeList
-   * LAB 10
-   */
-
-  /**
-   * callApiGetMovies func 
-   * LAB 10
-   */
-
-  /**
-   * handleAddReview 
-   * calls the callApiAddReview
-   */
-
-  /**
-   * callApiAddReview 
-   * send data in body to server.js 
-   * lab 10 
-   */
+  
 
     return (
       
@@ -279,8 +254,7 @@ const Review = () => {
 
             <Grid item>
               <MovieSelection 
-                handleMovie={handleMovie}
-                style={movieClasses}
+                handleMovieData={handleMovieData}                style={movieClasses}
                 moviesList={moviesList}
               />
             </Grid>
@@ -332,7 +306,7 @@ const Review = () => {
 
             <Grid item>
                 <p>{submitted ? "Thank you for submitting your review!" : <></>}</p>
-                <p>{submitted ? "Selected Movie: " + movie.name : <></>}</p>
+                <p>{submitted ? "Selected Movie: " + movieData.name : <></>}</p>
                 <p>{submitted ? "Title of Review: " + title : <></>}</p>
                 <p>{submitted ? "Review: " + body: <></>}</p>
                 <p>{submitted ? "Rating: " +  rating : <></>}</p>
@@ -354,7 +328,7 @@ const MovieSelection = (props) => (
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          onChange={props.handleMovie}
+          onChange={props.handleMovieData}  
         >
           {props.moviesList.map((item) => {
             return (
