@@ -2,8 +2,8 @@ import React from 'react';
 import Typography from "@material-ui/core/Typography";
 import Navbar from '../Navbar';
 
-const serverURL = ""; //Dev mode
-// const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3026"; //enable for deploy mode
+//const serverURL = ""; //Dev mode
+const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3026"; //enable for deploy mode
 
 const Mypage = () => {
 

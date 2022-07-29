@@ -4,8 +4,8 @@ import Navbar from '../Navbar';
 import TextField from "@material-ui/core/Textfield";
 import Button from "@material-ui/core/Button";
 
-const serverURL = ""; //Dev mode
-// const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3026"; //enable for deploy mode
+//const serverURL = ""; //Dev mode
+const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3026"; //enable for deploy mode
 
 const Search = () => {
 

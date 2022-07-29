@@ -24,7 +24,6 @@ app.post('/api/getQuery', (req, res) => {
 
 	let sql = 'Select name, concat(first_name, " ", last_name) as dname from movies, movies_directors, directors where movies.name = ? and movies_directors.movie_id = movies.id and movies_directors.director_id = directors.id';
 	
-	// 'Select name, first_name, last_name from a3larocq.movies, a3larocq.directors, a3larocq.movies_directors, a3larocq.roles, a3larocq.actors, where a3larocq.movies.name = ?, and ';
 
 	let data = [movie];
 
@@ -159,5 +158,5 @@ app.post('/api/loadUserSettings', (req, res) => {
 
 
 
-app.listen(port, () => console.log(`Listening on port ${port}`)); //for the dev version
-//app.listen(port, '172.31.31.77'); //for the deployed version, specify the IP address of the server
+// app.listen(port, () => console.log(`Listening on port ${port}`)); //for the dev version
+app.listen(port, '172.31.31.77'); //for the deployed version, specify the IP address of the server
