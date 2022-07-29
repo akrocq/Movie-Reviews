@@ -14,7 +14,77 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.use(express.static(path.join(__dirname, "client/build")));
 
+app.post('/api/getQuery', (req, res) => {
 
+	let movie = req.body.movie;
+	let director = req.body.director;
+	let actor = req.body.actor;
+	
+	let connection = mysql.createConnection(config);
+
+	let sql = 'Select name, concat(first_name, " ", last_name) as dname from movies, movies_directors, directors where movies.name = ? and movies_directors.movie_id = movies.id and movies_directors.director_id = directors.id';
+	
+	// 'Select name, first_name, last_name from a3larocq.movies, a3larocq.directors, a3larocq.movies_directors, a3larocq.roles, a3larocq.actors, where a3larocq.movies.name = ?, and ';
+
+	let data = [movie];
+
+	connection.query(sql, data, (error, results, fields) => {
+		if (error) {
+			return console.error(error.message);
+		}
+		
+		let string = JSON.stringify(results);
+		let obj = JSON.parse(string);
+		res.send({ express: string });
+	});
+	connection.end();
+});
+
+app.post('/api/getQueryTwo', (req, res) => {
+
+	let movie = req.body.movie;
+	let director = req.body.director;
+	let actor = req.body.actor;
+	
+	let connection = mysql.createConnection(config);
+
+	let sql = 'Select reviewContent from a3larocq.Review, a3larocq.movies where a3larocq.Review.movies_id = a3larocq.movies.id and a3larocq.movies.name = ?';
+	
+	// 'Select name, first_name, last_name from a3larocq.movies, a3larocq.directors, a3larocq.movies_directors, a3larocq.roles, a3larocq.actors, where a3larocq.movies.name = ?, and ';
+
+	let data = [movie];
+
+	connection.query(sql, data, (error, results, fields) => {
+		if (error) {
+			return console.error(error.message);
+		}
+		
+		let string = JSON.stringify(results);
+		let obj = JSON.parse(string);
+		res.send({ express: string });
+	});
+	connection.end();
+});
+
+app.post('/api/getFiveStarMovies', (req, res) => {
+
+	let connection = mysql.createConnection(config);
+
+	let sql = `select name, id from a3larocq.movies, a3larocq.Review where a3larocq.movies.id=a3larocq.Review.movies_id and a3larocq.Review.reviewScore=5;`;
+
+	let data = [];
+
+	connection.query(sql, data, (error, results, fields) => {
+		if (error) {
+			return console.error(error.message);
+		}
+		
+		let string = JSON.stringify(results);
+		let obj = JSON.parse(string);
+		res.send({ express: string });
+	});
+	connection.end();
+});
 
 app.post('/api/getMovies', (req, res) => {
 
@@ -42,7 +112,6 @@ app.post('/api/addReview', (req, res) => {
 	let title = req.body.title;
 	let body = req.body.body;
 	let rating = req.body.rating;
-	console.log(userID)
 
 	let connection = mysql.createConnection(config);
 
@@ -90,5 +159,5 @@ app.post('/api/loadUserSettings', (req, res) => {
 
 
 
-//app.listen(port, () => console.log(`Listening on port ${port}`)); //for the dev version
-app.listen(port, '172.31.31.77'); //for the deployed version, specify the IP address of the server
+app.listen(port, () => console.log(`Listening on port ${port}`)); //for the dev version
+//app.listen(port, '172.31.31.77'); //for the deployed version, specify the IP address of the server

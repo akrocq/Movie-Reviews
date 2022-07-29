@@ -17,6 +17,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
 import Button from '@material-ui/core/Button';
+import Navbar from '../Navbar';
 
 const serverURL = ""; //Dev mode
 // const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3026"; //enable for deploy mode
@@ -28,7 +29,7 @@ const serverURL = ""; //Dev mode
 //env | grep "PORT"
 //copy the number only and paste it in the serverURL in place of PORT, e.g.: const serverURL = "http://ov-research-4.uwaterloo.ca:3000";
 
-const fetch = require("node-fetch");
+
 
 const opacityValue = 0.9;
 
@@ -273,7 +274,7 @@ const Review = () => {
             
             <Grid item>
               <Typography variant={"h3"}>
-                Review One of These Specific Movies
+                Review One of These Movies
               </Typography>
             </Grid>
 
@@ -412,7 +413,7 @@ const ReviewRating = (props) => (
 
 
 
-class Home extends Component {
+class Reviews extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -489,6 +490,9 @@ class Home extends Component {
         </Grid>
 
         <Grid item>
+        <Navbar>
+    
+    </Navbar>
           <Review />
         </Grid>
 
@@ -512,8 +516,8 @@ class Home extends Component {
   }
 }
 
-Home.propTypes = {
+Reviews.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(Home);
+export default withStyles(styles)(Reviews);
